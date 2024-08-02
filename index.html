@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness App v6</title>
+    <title>Fitness App v7</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
-        <h1>Fitness App v6</h1>
+        <h1>Fitness App v7</h1>
         <nav>
             <ul>
+                <li><a href="#user-profile">Profile</a></li>
                 <li><a href="#bmi-calculator">BMI</a></li>
                 <li><a href="#fitness-tracker">Fitness</a></li>
                 <li><a href="#hydration-tracker">Hydration</a></li>
@@ -24,6 +25,24 @@
     </header>
     
     <main>
+        <section id="user-auth">
+            <h2>User Authentication</h2>
+            <div id="login-form">
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+                <button onclick="login()">Login</button>
+                <button onclick="register()">Register</button>
+            </div>
+            <div id="logout-button" style="display: none;">
+                <button onclick="logout()">Logout</button>
+            </div>
+        </section>
+
+        <section id="user-profile" style="display: none;">
+            <h2>User Profile</h2>
+            <div id="profile-info"></div>
+        </section>
+
         <section id="bmi-calculator">
             <h2>BMI Calculator</h2>
             <input type="number" id="weight" placeholder="Weight (kg)" required>
@@ -90,7 +109,6 @@
             <canvas id="progress-chart"></canvas>
         </section>
     </main>
-
     <script src="app.js"></script>
 </body>
 </html>
