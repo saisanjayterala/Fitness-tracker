@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness App v2</title>
+    <title>Fitness App v3</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Fitness App v2</h1>
+        <h1>Fitness App v3</h1>
+        <nav>
+            <ul>
+                <li><a href="#bmi-calculator">BMI</a></li>
+                <li><a href="#fitness-tracker">Fitness</a></li>
+                <li><a href="#hydration-tracker">Hydration</a></li>
+                <li><a href="#sleep-assessment">Sleep</a></li>
+            </ul>
+        </nav>
     </header>
     
     <main>
@@ -26,6 +34,7 @@
             <input type="number" id="duration" placeholder="Duration (minutes)">
             <button onclick="addActivity()">Add Activity</button>
             <div id="activity-list"></div>
+            <div id="total-calories"></div>
         </section>
 
         <section id="hydration-tracker">
@@ -33,9 +42,24 @@
             <input type="number" id="water-intake" placeholder="Water intake (ml)">
             <button onclick="addWaterIntake()">Add Water Intake</button>
             <div id="water-intake-total"></div>
+            <div id="hydration-status"></div>
+        </section>
+
+        <section id="sleep-assessment">
+            <h2>Sleep Quality Assessment</h2>
+            <input type="number" id="sleep-duration" placeholder="Sleep duration (hours)">
+            <select id="sleep-quality">
+                <option value="">Select sleep quality</option>
+                <option value="poor">Poor</option>
+                <option value="fair">Fair</option>
+                <option value="good">Good</option>
+                <option value="excellent">Excellent</option>
+            </select>
+            <button onclick="assessSleep()">Assess Sleep</button>
+            <div id="sleep-result"></div>
         </section>
     </main>
 
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

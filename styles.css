@@ -13,6 +13,21 @@ header {
     text-align: center;
 }
 
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
 h1, h2 {
     color: #333;
 }
@@ -25,7 +40,7 @@ section {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-input, button {
+input, button, select {
     margin: 10px 0;
     padding: 8px;
     width: 100%;
@@ -44,7 +59,7 @@ button:hover {
     background-color: #45a049;
 }
 
-#bmi-result, #activity-list, #water-intake-total {
+#bmi-result, #activity-list, #water-intake-total, #total-calories, #hydration-status, #sleep-result {
     margin-top: 20px;
     font-weight: bold;
 }
