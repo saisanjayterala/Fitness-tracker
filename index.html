@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness App v3</title>
+    <title>Fitness App v4</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Fitness App v3</h1>
+        <h1>Fitness App v4</h1>
         <nav>
             <ul>
                 <li><a href="#bmi-calculator">BMI</a></li>
                 <li><a href="#fitness-tracker">Fitness</a></li>
                 <li><a href="#hydration-tracker">Hydration</a></li>
                 <li><a href="#sleep-assessment">Sleep</a></li>
+                <li><a href="#nutrition-diary">Nutrition</a></li>
             </ul>
         </nav>
     </header>
@@ -57,6 +58,15 @@
             </select>
             <button onclick="assessSleep()">Assess Sleep</button>
             <div id="sleep-result"></div>
+        </section>
+
+        <section id="nutrition-diary">
+            <h2>Nutrition Diary</h2>
+            <input type="text" id="food-item" placeholder="Food item">
+            <input type="number" id="calories" placeholder="Calories">
+            <button onclick="addFoodItem()">Add Food Item</button>
+            <div id="food-list"></div>
+            <div id="total-calories-consumed"></div>
         </section>
     </main>
 

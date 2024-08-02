@@ -13,7 +13,7 @@ function calculateBMI() {
     result.innerHTML = `Your BMI is ${bmi.toFixed(2)}. Category: ${category}`;
 }
 
-let totalCalories = 0;
+let totalCaloriesBurned = 0;
 
 function addActivity() {
     const activity = document.getElementById('activity').value;
@@ -28,9 +28,9 @@ function addActivity() {
 
         // Simple calorie calculation (just an example, not accurate)
         const caloriesBurned = duration * 5;
-        totalCalories += caloriesBurned;
+        totalCaloriesBurned += caloriesBurned;
 
-        totalCaloriesElement.textContent = `Total calories burned: ${totalCalories}`;
+        totalCaloriesElement.textContent = `Total calories burned: ${totalCaloriesBurned}`;
 
         document.getElementById('activity').value = '';
         document.getElementById('duration').value = '';
@@ -81,5 +81,26 @@ function assessSleep() {
         }
 
         sleepResult.textContent = `Sleep duration: ${sleepDuration} hours. Sleep quality: ${sleepQuality}. ${advice}`;
+    }
+}
+
+let totalCaloriesConsumed = 0;
+
+function addFoodItem() {
+    const foodItem = document.getElementById('food-item').value;
+    const calories = parseInt(document.getElementById('calories').value);
+    const foodList = document.getElementById('food-list');
+    const totalCaloriesConsumedElement = document.getElementById('total-calories-consumed');
+    
+    if (foodItem && calories) {
+        const listItem = document.createElement('p');
+        listItem.textContent = `${foodItem}: ${calories} calories`;
+        foodList.appendChild(listItem);
+
+        totalCaloriesConsumed += calories;
+        totalCaloriesConsumedElement.textContent = `Total calories consumed: ${totalCaloriesConsumed}`;
+
+        document.getElementById('food-item').value = '';
+        document.getElementById('calories').value = '';
     }
 }

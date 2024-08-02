@@ -59,7 +59,7 @@ button:hover {
     background-color: #45a049;
 }
 
-#bmi-result, #activity-list, #water-intake-total, #total-calories, #hydration-status, #sleep-result {
+#bmi-result, #activity-list, #water-intake-total, #total-calories, #hydration-status, #sleep-result, #food-list, #total-calories-consumed {
     margin-top: 20px;
     font-weight: bold;
 }
