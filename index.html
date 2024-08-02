@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App</title>
+</head>
+<body>
+    <h1>Fitness App</h1>
+    
+    <div class="calculator">
+        <h2>BMI Calculator</h2>
+        <input type="number" id="weight" placeholder="Weight (kg)" required>
+        <input type="number" id="height" placeholder="Height (cm)" required>
+        <button onclick="calculateBMI()">Calculate BMI</button>
+        <div id="result"></div>
+    </div>
+
+    <div class="tracker">
+        <h2>Fitness Tracker</h2>
+        <input type="text" id="activity" placeholder="Activity">
+        <input type="number" id="duration" placeholder="Duration (minutes)">
+        <button onclick="addActivity()">Add Activity</button>
+        <div id="activity-list"></div>
+    </div>
+</body>
+</html>
