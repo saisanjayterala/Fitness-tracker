@@ -3,122 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness App v8</title>
+    <title>FitHub Pro v9</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 </head>
 <body>
-    <header>
-        <h1>Fitness App v8</h1>
-        <nav>
-            <ul>
-                <li><a href="#user-profile">Profile</a></li>
-                <li><a href="#goal-setting">Goals</a></li>
-                <li><a href="#bmi-calculator">BMI</a></li>
-                <li><a href="#fitness-tracker">Fitness</a></li>
-                <li><a href="#hydration-tracker">Hydration</a></li>
-                <li><a href="#sleep-assessment">Sleep</a></li>
-                <li><a href="#nutrition-diary">Nutrition</a></li>
-                <li><a href="#workout-routines">Workouts</a></li>
-                <li><a href="#progress-tracking">Progress</a></li>
-            </ul>
-        </nav>
-    </header>
-    
-    <main>
-        <section id="user-auth">
-            <h2>User Authentication</h2>
+    <div id="auth-container">
+        <div class="auth-box" data-aos="fade-up">
+            <h1>FitHub Pro</h1>
             <div id="login-form">
                 <input type="text" id="username" placeholder="Username">
                 <input type="password" id="password" placeholder="Password">
                 <button onclick="login()">Login</button>
+                <p>Don't have an account? <a href="#" onclick="toggleAuthMode()">Register</a></p>
+            </div>
+            <div id="register-form" style="display: none;">
+                <input type="text" id="reg-username" placeholder="Choose a username">
+                <input type="password" id="reg-password" placeholder="Choose a password">
+                <input type="email" id="reg-email" placeholder="Your email">
                 <button onclick="register()">Register</button>
+                <p>Already have an account? <a href="#" onclick="toggleAuthMode()">Login</a></p>
             </div>
-            <div id="logout-button" style="display: none;">
-                <button onclick="logout()">Logout</button>
-            </div>
-        </section>
+        </div>
+    </div>
 
-        <section id="user-profile" style="display: none;">
-            <h2>User Profile</h2>
-            <div id="profile-info"></div>
-        </section>
+    <div id="app-container" style="display: none;">
+        <header>
+            <h1>FitHub Pro</h1>
+            <nav>
+                <ul>
+                    <li><a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#fitness"><i class="fas fa-dumbbell"></i> Fitness</a></li>
+                    <li><a href="#nutrition"><i class="fas fa-utensils"></i> Nutrition</a></li>
+                    <li><a href="#goals"><i class="fas fa-bullseye"></i> Goals</a></li>
+                    <li><a href="#profile"><i class="fas fa-user"></i> Profile</a></li>
+                </ul>
+            </nav>
+            <button id="logout-btn" onclick="logout()">Logout</button>
+        </header>
+        
+        <main>
+            <section id="dashboard" class="active-section">
+                <h2>Dashboard</h2>
+                <div class="dashboard-grid">
+                    <div class="dashboard-item" data-aos="fade-up">
+                        <h3>BMI</h3>
+                        <div id="bmi-result">Calculate your BMI</div>
+                        <button onclick="showBMICalculator()">Calculate BMI</button>
+                    </div>
+                    <div class="dashboard-item" data-aos="fade-up" data-aos-delay="100">
+                        <h3>Calories Burned</h3>
+                        <div id="calories-burned">0 calories</div>
+                    </div>
+                    <div class="dashboard-item" data-aos="fade-up" data-aos-delay="200">
+                        <h3>Water Intake</h3>
+                        <div id="water-intake">0 ml</div>
+                    </div>
+                    <div class="dashboard-item" data-aos="fade-up" data-aos-delay="300">
+                        <h3>Progress</h3>
+                        <canvas id="progress-chart"></canvas>
+                    </div>
+                </div>
+            </section>
 
-        <section id="goal-setting" style="display: none;">
-            <h2>Goal Setting</h2>
-            <input type="number" id="weight-goal" placeholder="Target Weight (kg)">
-            <input type="number" id="steps-goal" placeholder="Daily Step Goal">
-            <input type="number" id="calories-goal" placeholder="Daily Calorie Goal">
-            <button onclick="setGoals()">Set Goals</button>
-            <div id="current-goals"></div>
-        </section>
+            <section id="fitness">
+                <h2>Fitness Tracker</h2>
+                <div class="fitness-grid">
+                    <div class="fitness-item" data-aos="fade-right">
+                        <h3>Add Activity</h3>
+                        <input type="text" id="activity" placeholder="Activity">
+                        <input type="number" id="duration" placeholder="Duration (minutes)">
+                        <button onclick="addActivity()">Add Activity</button>
+                    </div>
+                    <div class="fitness-item" data-aos="fade-left">
+                        <h3>Recent Activities</h3>
+                        <div id="activity-list"></div>
+                    </div>
+                </div>
+            </section>
 
-        <section id="bmi-calculator">
-            <h2>BMI Calculator</h2>
+            <section id="nutrition">
+                <h2>Nutrition Diary</h2>
+                <div class="nutrition-grid">
+                    <div class="nutrition-item" data-aos="fade-up">
+                        <h3>Add Food Item</h3>
+                        <input type="text" id="food-item" placeholder="Food item">
+                        <input type="number" id="calories" placeholder="Calories">
+                        <button onclick="addFoodItem()">Add Food Item</button>
+                    </div>
+                    <div class="nutrition-item" data-aos="fade-up" data-aos-delay="100">
+                        <h3>Today's Food Log</h3>
+                        <div id="food-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="goals">
+                <h2>Fitness Goals</h2>
+                <div class="goals-grid">
+                    <div class="goals-item" data-aos="zoom-in">
+                        <h3>Set New Goal</h3>
+                        <input type="number" id="weight-goal" placeholder="Target Weight (kg)">
+                        <input type="number" id="steps-goal" placeholder="Daily Step Goal">
+                        <input type="number" id="calories-goal" placeholder="Daily Calorie Goal">
+                        <button onclick="setGoals()">Set Goals</button>
+                    </div>
+                    <div class="goals-item" data-aos="zoom-in" data-aos-delay="100">
+                        <h3>Current Goals</h3>
+                        <div id="current-goals"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profile">
+                <h2>User Profile</h2>
+                <div class="profile-info" data-aos="fade-up">
+                    <div id="profile-details"></div>
+                    <button onclick="showEditProfile()">Edit Profile</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="bmi-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Calculate BMI</h2>
             <input type="number" id="weight" placeholder="Weight (kg)" required>
             <input type="number" id="height" placeholder="Height (cm)" required>
             <button onclick="calculateBMI()">Calculate BMI</button>
-            <div id="bmi-result"></div>
-        </section>
+            <div id="bmi-result-modal"></div>
+        </div>
+    </div>
 
-        <section id="fitness-tracker">
-            <h2>Fitness Tracker</h2>
-            <input type="text" id="activity" placeholder="Activity">
-            <input type="number" id="duration" placeholder="Duration (minutes)">
-            <button onclick="addActivity()">Add Activity</button>
-            <div id="activity-list"></div>
-            <div id="total-calories"></div>
-        </section>
-
-        <section id="hydration-tracker">
-            <h2>Hydration Tracker</h2>
-            <input type="number" id="water-intake" placeholder="Water intake (ml)">
-            <button onclick="addWaterIntake()">Add Water Intake</button>
-            <div id="water-intake-total"></div>
-            <div id="hydration-status"></div>
-        </section>
-
-        <section id="sleep-assessment">
-            <h2>Sleep Quality Assessment</h2>
-            <input type="number" id="sleep-duration" placeholder="Sleep duration (hours)">
-            <select id="sleep-quality">
-                <option value="">Select sleep quality</option>
-                <option value="poor">Poor</option>
-                <option value="fair">Fair</option>
-                <option value="good">Good</option>
-                <option value="excellent">Excellent</option>
-            </select>
-            <button onclick="assessSleep()">Assess Sleep</button>
-            <div id="sleep-result"></div>
-        </section>
-
-        <section id="nutrition-diary">
-            <h2>Nutrition Diary</h2>
-            <input type="text" id="food-item" placeholder="Food item">
-            <input type="number" id="calories" placeholder="Calories">
-            <button onclick="addFoodItem()">Add Food Item</button>
-            <div id="food-list"></div>
-            <div id="total-calories-consumed"></div>
-        </section>
-
-        <section id="workout-routines">
-            <h2>Workout Routines</h2>
-            <select id="workout-type">
-                <option value="">Select workout type</option>
-                <option value="full-body">Full Body</option>
-                <option value="upper-body">Upper Body</option>
-                <option value="lower-body">Lower Body</option>
-                <option value="cardio">Cardio</option>
-            </select>
-            <button onclick="getWorkout()">Get Workout</button>
-            <div id="workout-plan"></div>
-        </section>
-
-        <section id="progress-tracking">
-            <h2>Progress Tracking</h2>
-            <canvas id="progress-chart"></canvas>
-        </section>
-    </main>
-    <script src="script.js"></script>
+    <script src="app.js"></script>
+    <script>
+        AOS.init();
+    </script>
 </body>
 </html>
