@@ -3,25 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness App</title>
+    <title>Fitness App v2</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Fitness App</h1>
+    <header>
+        <h1>Fitness App v2</h1>
+    </header>
     
-    <div class="calculator">
-        <h2>BMI Calculator</h2>
-        <input type="number" id="weight" placeholder="Weight (kg)" required>
-        <input type="number" id="height" placeholder="Height (cm)" required>
-        <button onclick="calculateBMI()">Calculate BMI</button>
-        <div id="result"></div>
-    </div>
+    <main>
+        <section id="bmi-calculator">
+            <h2>BMI Calculator</h2>
+            <input type="number" id="weight" placeholder="Weight (kg)" required>
+            <input type="number" id="height" placeholder="Height (cm)" required>
+            <button onclick="calculateBMI()">Calculate BMI</button>
+            <div id="bmi-result"></div>
+        </section>
 
-    <div class="tracker">
-        <h2>Fitness Tracker</h2>
-        <input type="text" id="activity" placeholder="Activity">
-        <input type="number" id="duration" placeholder="Duration (minutes)">
-        <button onclick="addActivity()">Add Activity</button>
-        <div id="activity-list"></div>
-    </div>
+        <section id="fitness-tracker">
+            <h2>Fitness Tracker</h2>
+            <input type="text" id="activity" placeholder="Activity">
+            <input type="number" id="duration" placeholder="Duration (minutes)">
+            <button onclick="addActivity()">Add Activity</button>
+            <div id="activity-list"></div>
+        </section>
+
+        <section id="hydration-tracker">
+            <h2>Hydration Tracker</h2>
+            <input type="number" id="water-intake" placeholder="Water intake (ml)">
+            <button onclick="addWaterIntake()">Add Water Intake</button>
+            <div id="water-intake-total"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
 </body>
 </html>
