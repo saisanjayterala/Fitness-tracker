@@ -1,102 +1,140 @@
 let currentUser = null;
 let userData = {};
+let totalCaloriesBurned = 0;
+let totalWaterIntake = 0;
+let totalCaloriesConsumed = 0;
+let progressChart;
 
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    if (username && password) {
-        currentUser = username;
-        loadUserData();
-        updateUI();
-    } else {
-        alert('Please enter both username and password');
-    }
+function toggleAuthMode() {
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+    registerForm.style.display = registerForm.style.display === 'none' ? 'block' : 'none';
 }
 
-function register() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    if (username && password) {
+function login() {
+    try {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        console.log('Attempting login for username:', username);
+        
+        if (!username || !password) {
+            throw new Error('Please enter both username and password');
+        }
+        
+        if (!userData[username]) {
+            throw new Error('Username not found');
+        }
+        
+        if (userData[username].password !== password) {
+            throw new Error('Incorrect password');
+        }
+        
         currentUser = username;
-        userData[username] = {
-            bmiHistory: [],
-            caloriesBurnedHistory: [],
-            caloriesConsumedHistory: [],
-            waterIntakeHistory: [],
-            sleepHistory: [],
-            goals: {
-                weight: null,
-                steps: null,
-                calories: null
-            }
-        };
-        saveUserData();
+        localStorage.setItem('currentUser', currentUser);
+        console.log('Login successful for user:', currentUser);
+        
+        loadUserData();
+        initializeUserStats();
         updateUI();
+        
+        console.log('User data loaded and UI updated');
+    } catch (error) {
+        console.error('Login error:', error.message);
+        alert(error.message);
+    }
+}
+function register() {
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+    const email = document.getElementById('reg-email').value;
+    if (username && password && email) {
+        if (userData[username]) {
+            alert('Username already exists');
+        } else {
+            userData[username] = {
+                password: password,
+                email: email,
+                bmiHistory: [],
+                caloriesBurnedHistory: [],
+                caloriesConsumedHistory: [],
+                waterIntakeHistory: [],
+                sleepHistory: [],
+                goals: {
+                    weight: null,
+                    steps: null,
+                    calories: null
+                }
+            };
+            currentUser = username;
+            localStorage.setItem('currentUser', currentUser);
+            saveUserData();
+            initializeUserStats();
+            updateUI();
+            toggleAuthMode();
+        }
     } else {
-        alert('Please enter both username and password');
+        alert('Please fill in all fields');
     }
 }
 
 function logout() {
     currentUser = null;
+    localStorage.removeItem('currentUser');
+    totalCaloriesBurned = 0;
+    totalWaterIntake = 0;
+    totalCaloriesConsumed = 0;
     updateUI();
 }
 
 function loadUserData() {
-    const storedData = localStorage.getItem(currentUser);
-    if (storedData) {
-        userData[currentUser] = JSON.parse(storedData);
-    } else {
-        userData[currentUser] = {
-            bmiHistory: [],
-            caloriesBurnedHistory: [],
-            caloriesConsumedHistory: [],
-            waterIntakeHistory: [],
-            sleepHistory: [],
-            goals: {
-                weight: null,
-                steps: null,
-                calories: null
-            }
-        };
+    try {
+        const storedData = localStorage.getItem('userData');
+        console.log('Stored user data:', storedData);
+        
+        if (storedData) {
+            userData = JSON.parse(storedData);
+            console.log('Parsed user data:', userData);
+        } else {
+            console.log('No stored user data found');
+        }
+    } catch (error) {
+        console.error('Error loading user data:', error);
+        alert('Error loading user data. Please try again.');
     }
 }
 
 function saveUserData() {
-    localStorage.setItem(currentUser, JSON.stringify(userData[currentUser]));
+    localStorage.setItem('userData', JSON.stringify(userData));
 }
 
 function updateUI() {
-    const authSection = document.getElementById('user-auth');
-    const profileSection = document.getElementById('user-profile');
-    const goalSection = document.getElementById('goal-setting');
-    const loginForm = document.getElementById('login-form');
-    const logoutButton = document.getElementById('logout-button');
+    const authContainer = document.getElementById('auth-container');
+    const appContainer = document.getElementById('app-container');
 
     if (currentUser) {
-        authSection.style.display = 'none';
-        profileSection.style.display = 'block';
-        goalSection.style.display = 'block';
-        logoutButton.style.display = 'block';
+        authContainer.style.display = 'none';
+        appContainer.style.display = 'block';
         updateProfileInfo();
         updateGoals();
+        updateProgressChart();
     } else {
-        authSection.style.display = 'block';
-        profileSection.style.display = 'none';
-        goalSection.style.display = 'none';
-        logoutButton.style.display = 'none';
+        authContainer.style.display = 'block';
+        appContainer.style.display = 'none';
     }
 }
 
 function updateProfileInfo() {
-    const profileInfo = document.getElementById('profile-info');
-    const userDataArray = userData[currentUser];
-    const latestBMI = userDataArray.bmiHistory[userDataArray.bmiHistory.length - 1] || 'Not calculated';
-    const totalCaloriesBurned = userDataArray.caloriesBurnedHistory[userDataArray.caloriesBurnedHistory.length - 1] || 0;
-    const totalCaloriesConsumed = userDataArray.caloriesConsumedHistory[userDataArray.caloriesConsumedHistory.length - 1] || 0;
+    const profileInfo = document.getElementById('profile-details');
+    const user = userData[currentUser];
+    const latestBMI = user.bmiHistory[user.bmiHistory.length - 1] || 'Not calculated';
+    const totalCaloriesBurned = user.caloriesBurnedHistory[user.caloriesBurnedHistory.length - 1] || 0;
+    const totalCaloriesConsumed = user.caloriesConsumedHistory[user.caloriesConsumedHistory.length - 1] || 0;
 
     profileInfo.innerHTML = `
         <p>Username: ${currentUser}</p>
+        <p>Email: ${user.email}</p>
         <p>Latest BMI: ${latestBMI}</p>
         <p>Total Calories Burned: ${totalCaloriesBurned}</p>
         <p>Total Calories Consumed: ${totalCaloriesConsumed}</p>
@@ -104,11 +142,6 @@ function updateProfileInfo() {
 }
 
 function setGoals() {
-    if (!currentUser) {
-        alert('Please log in to set goals');
-        return;
-    }
-
     const weightGoal = document.getElementById('weight-goal').value;
     const stepsGoal = document.getElementById('steps-goal').value;
     const caloriesGoal = document.getElementById('calories-goal').value;
@@ -142,8 +175,8 @@ function updateGoals() {
     }
 
     if (goals.steps) {
-        // Assume we have a steps tracking feature
-        const currentSteps = 0; // This should be updated with actual step count
+        const currentSteps = userData[currentUser].stepsHistory ? 
+            userData[currentUser].stepsHistory[userData[currentUser].stepsHistory.length - 1] : 0;
         const stepsProgress = Math.min(100, (currentSteps / goals.steps) * 100);
         goalsHTML += `
             <p>Daily Step Goal: ${goals.steps} steps</p>
@@ -169,15 +202,10 @@ function updateGoals() {
 }
 
 function calculateBMI() {
-    if (!currentUser) {
-        alert('Please log in to use this feature');
-        return;
-    }
-
     const weight = document.getElementById('weight').value;
     const height = document.getElementById('height').value / 100;
     const bmi = weight / (height * height);
-    const result = document.getElementById('bmi-result');
+    const result = document.getElementById('bmi-result-modal');
     
     let category;
     if (bmi < 18.5) category = 'Underweight';
@@ -194,56 +222,37 @@ function calculateBMI() {
     updateGoals();
 }
 
-let totalCaloriesBurned = 0;
-
 function addActivity() {
-    if (!currentUser) {
-        alert('Please log in to use this feature');
-        return;
-    }
-
     const activity = document.getElementById('activity').value;
     const duration = document.getElementById('duration').value;
     const activityList = document.getElementById('activity-list');
-    const totalCaloriesElement = document.getElementById('total-calories');
     
     if (activity && duration) {
         const listItem = document.createElement('p');
         listItem.textContent = `${activity}: ${duration} minutes`;
         activityList.appendChild(listItem);
 
-        // Simple calorie calculation (just an example, not accurate)
         const caloriesBurned = duration * 5;
         totalCaloriesBurned += caloriesBurned;
 
-        totalCaloriesElement.textContent = `Total calories burned: ${totalCaloriesBurned}`;
-
-        document.getElementById('activity').value = '';
-        document.getElementById('duration').value = '';
-
         userData[currentUser].caloriesBurnedHistory.push(totalCaloriesBurned);
         saveUserData();
+        updateTotalCaloriesBurned();
         updateProgressChart();
         updateProfileInfo();
         updateGoals();
+
+        document.getElementById('activity').value = '';
+        document.getElementById('duration').value = '';
     }
 }
 
-let totalWaterIntake = 0;
-
 function addWaterIntake() {
-    if (!currentUser) {
-        alert('Please log in to use this feature');
-        return;
-    }
-
     const waterIntake = parseInt(document.getElementById('water-intake').value);
-    const waterIntakeTotal = document.getElementById('water-intake-total');
     const hydrationStatus = document.getElementById('hydration-status');
     
     if (waterIntake) {
         totalWaterIntake += waterIntake;
-        waterIntakeTotal.textContent = `Total water intake: ${totalWaterIntake} ml`;
         
         if (totalWaterIntake >= 2000) {
             hydrationStatus.textContent = "You're well hydrated!";
@@ -253,19 +262,15 @@ function addWaterIntake() {
             hydrationStatus.style.color = "red";
         }
 
-        document.getElementById('water-intake').value = '';
-
         userData[currentUser].waterIntakeHistory.push(totalWaterIntake);
         saveUserData();
+        updateTotalWaterIntake();
+
+        document.getElementById('water-intake').value = '';
     }
 }
 
 function assessSleep() {
-    if (!currentUser) {
-        alert('Please log in to use this feature');
-        return;
-    }
-
     const sleepDuration = document.getElementById('sleep-duration').value;
     const sleepQuality = document.getElementById('sleep-quality').value;
     const sleepResult = document.getElementById('sleep-result');
@@ -292,18 +297,10 @@ function assessSleep() {
     }
 }
 
-let totalCaloriesConsumed = 0;
-
 function addFoodItem() {
-    if (!currentUser) {
-        alert('Please log in to use this feature');
-        return;
-    }
-
     const foodItem = document.getElementById('food-item').value;
     const calories = parseInt(document.getElementById('calories').value);
     const foodList = document.getElementById('food-list');
-    const totalCaloriesConsumedElement = document.getElementById('total-calories-consumed');
     
     if (foodItem && calories) {
         const listItem = document.createElement('p');
@@ -311,25 +308,20 @@ function addFoodItem() {
         foodList.appendChild(listItem);
 
         totalCaloriesConsumed += calories;
-        totalCaloriesConsumedElement.textContent = `Total calories consumed: ${totalCaloriesConsumed}`;
-
-        document.getElementById('food-item').value = '';
-        document.getElementById('calories').value = '';
 
         userData[currentUser].caloriesConsumedHistory.push(totalCaloriesConsumed);
         saveUserData();
+        updateTotalCaloriesConsumed();
         updateProgressChart();
         updateProfileInfo();
         updateGoals();
+
+        document.getElementById('food-item').value = '';
+        document.getElementById('calories').value = '';
     }
 }
 
 function getWorkout() {
-    if (!currentUser) {
-        alert('Please log in to use this feature');
-        return;
-    }
-
     const workoutType = document.getElementById('workout-type').value;
     const workoutPlan = document.getElementById('workout-plan');
     
@@ -385,13 +377,7 @@ function getWorkout() {
     }
 }
 
-let progressChart;
-
 function updateProgressChart() {
-    if (!currentUser) {
-        return;
-    }
-
     const ctx = document.getElementById('progress-chart').getContext('2d');
     
     if (progressChart) {
@@ -432,10 +418,95 @@ function updateProgressChart() {
     });
 }
 
-// Initialize the UI
-updateUI();
+function showBMICalculator() {
+    const modal = document.getElementById('bmi-modal');
+    modal.style.display = 'block';
+}
 
-// Event listeners for login and registration
+function switchSection(sectionId) {
+    const sections = document.querySelectorAll('main > section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+function handleNavigation() {
+    const hash = window.location.hash;
+    if (hash) {
+        const sectionId = hash.substring(1);
+        switchSection(sectionId);
+    }
+}
+
+
+function updateTotalCaloriesBurned() {
+    const totalCaloriesElement = document.getElementById('calories-burned');
+    totalCaloriesElement.textContent = `Total calories burned: ${totalCaloriesBurned}`;
+}
+
+function updateTotalWaterIntake() {
+    const waterIntakeTotal = document.getElementById('water-intake-total');
+    waterIntakeTotal.textContent = `Total water intake: ${totalWaterIntake} ml`;
+}
+
+function updateTotalCaloriesConsumed() {
+    const totalCaloriesConsumedElement = document.getElementById('total-calories-consumed');
+    totalCaloriesConsumedElement.textContent = `Total calories consumed: ${totalCaloriesConsumed}`;
+}
+
+function initializeUserStats() {
+    if (currentUser && userData[currentUser]) {
+        const user = userData[currentUser];
+        totalCaloriesBurned = user.caloriesBurnedHistory[user.caloriesBurnedHistory.length - 1] || 0;
+        totalWaterIntake = user.waterIntakeHistory[user.waterIntakeHistory.length - 1] || 0;
+        totalCaloriesConsumed = user.caloriesConsumedHistory[user.caloriesConsumedHistory.length - 1] || 0;
+        
+        updateTotalCaloriesBurned();
+        updateTotalWaterIntake();
+        updateTotalCaloriesConsumed();
+    }
+}
+
+function handleError(error) {
+    console.error('An error occurred:', error);
+    alert('An error occurred. Please try again.');
+}
+
+function safelyExecute(func) {
+    return function(...args) {
+        try {
+            func.apply(this, args);
+        } catch (error) {
+            handleError(error);
+        }
+    }
+}
+
+// Apply safelyExecute to all main functions
+login = safelyExecute(login);
+register = safelyExecute(register);
+logout = safelyExecute(logout);
+calculateBMI = safelyExecute(calculateBMI);
+addActivity = safelyExecute(addActivity);
+addWaterIntake = safelyExecute(addWaterIntake);
+assessSleep = safelyExecute(assessSleep);
+addFoodItem = safelyExecute(addFoodItem);
+getWorkout = safelyExecute(getWorkout);
+setGoals = safelyExecute(setGoals);
+
+window.addEventListener('load', function() {
+    loadUserData();
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+        currentUser = storedUser;
+        initializeUserStats();
+        updateUI();
+    }
+    handleNavigation();
+});
+window.addEventListener('hashchange', handleNavigation);
+
 document.getElementById('username').addEventListener('keyup', function(event) {
     if (event.key === 'Enter') {
         login();
@@ -448,13 +519,57 @@ document.getElementById('password').addEventListener('keyup', function(event) {
     }
 });
 
-// Load user data if there's a stored session
-window.addEventListener('load', function() {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-        currentUser = storedUser;
-        loadUserData();
-        updateUI();
-        updateProgressChart();
+document.getElementById('reg-username').addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+        register();
     }
 });
+
+document.getElementById('reg-password').addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+        register();
+    }
+});
+
+document.getElementById('reg-email').addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+        register();
+    }
+});
+
+document.getElementById('logout-btn').addEventListener('click', logout);
+document.querySelector('button[onclick="calculateBMI()"]').addEventListener('click', calculateBMI);
+document.querySelector('button[onclick="addActivity()"]').addEventListener('click', addActivity);
+document.querySelector('button[onclick="addWaterIntake()"]').addEventListener('click', addWaterIntake);
+document.querySelector('button[onclick="assessSleep()"]').addEventListener('click', assessSleep);
+document.querySelector('button[onclick="addFoodItem()"]').addEventListener('click', addFoodItem);
+document.querySelector('button[onclick="getWorkout()"]').addEventListener('click', getWorkout);
+document.querySelector('button[onclick="setGoals()"]').addEventListener('click', setGoals);
+
+document.querySelectorAll('nav ul li a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const sectionId = this.getAttribute('href').substring(1);
+        switchSection(sectionId);
+    });
+});
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('bmi-modal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Close modal when clicking on close button
+document.querySelector('.close').onclick = function() {
+    document.getElementById('bmi-modal').style.display = 'none';
+}
+
+// Initialize the first section (Dashboard) as active
+switchSection('dashboard');
+
+// Initialize the app
+loadUserData();
+updateUI();
