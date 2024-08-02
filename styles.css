@@ -49,7 +49,7 @@ button {
 button:hover {
     background-color: #45a049;
 }
-#bmi-result, #activity-list, #water-intake-total, #total-calories, #hydration-status, #sleep-result, #food-list, #total-calories-consumed, #workout-plan, #profile-info {
+#bmi-result, #activity-list, #water-intake-total, #total-calories, #hydration-status, #sleep-result, #food-list, #total-calories-consumed, #workout-plan, #profile-info, #current-goals {
     margin-top: 20px;
     font-weight: bold;
 }
@@ -75,4 +75,16 @@ button:hover {
 }
 #logout-button {
     text-align: right;
+}
+.goal-progress {
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 5px;
+}
+.progress-bar {
+    background-color: #4CAF50;
+    height: 20px;
+    border-radius: 5px;
+    transition: width 0.5s ease-in-out;
 }

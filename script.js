@@ -4,7 +4,6 @@ let userData = {};
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    // In a real app, you would validate credentials against a backend
     if (username && password) {
         currentUser = username;
         loadUserData();
@@ -17,7 +16,6 @@ function login() {
 function register() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    // In a real app, you would send this data to a backend for registration
     if (username && password) {
         currentUser = username;
         userData[username] = {
@@ -25,7 +23,12 @@ function register() {
             caloriesBurnedHistory: [],
             caloriesConsumedHistory: [],
             waterIntakeHistory: [],
-            sleepHistory: []
+            sleepHistory: [],
+            goals: {
+                weight: null,
+                steps: null,
+                calories: null
+            }
         };
         saveUserData();
         updateUI();
@@ -49,7 +52,12 @@ function loadUserData() {
             caloriesBurnedHistory: [],
             caloriesConsumedHistory: [],
             waterIntakeHistory: [],
-            sleepHistory: []
+            sleepHistory: [],
+            goals: {
+                weight: null,
+                steps: null,
+                calories: null
+            }
         };
     }
 }
@@ -61,17 +69,21 @@ function saveUserData() {
 function updateUI() {
     const authSection = document.getElementById('user-auth');
     const profileSection = document.getElementById('user-profile');
+    const goalSection = document.getElementById('goal-setting');
     const loginForm = document.getElementById('login-form');
     const logoutButton = document.getElementById('logout-button');
 
     if (currentUser) {
         authSection.style.display = 'none';
         profileSection.style.display = 'block';
+        goalSection.style.display = 'block';
         logoutButton.style.display = 'block';
         updateProfileInfo();
+        updateGoals();
     } else {
         authSection.style.display = 'block';
         profileSection.style.display = 'none';
+        goalSection.style.display = 'none';
         logoutButton.style.display = 'none';
     }
 }
@@ -89,6 +101,71 @@ function updateProfileInfo() {
         <p>Total Calories Burned: ${totalCaloriesBurned}</p>
         <p>Total Calories Consumed: ${totalCaloriesConsumed}</p>
     `;
+}
+
+function setGoals() {
+    if (!currentUser) {
+        alert('Please log in to set goals');
+        return;
+    }
+
+    const weightGoal = document.getElementById('weight-goal').value;
+    const stepsGoal = document.getElementById('steps-goal').value;
+    const caloriesGoal = document.getElementById('calories-goal').value;
+
+    userData[currentUser].goals = {
+        weight: weightGoal,
+        steps: stepsGoal,
+        calories: caloriesGoal
+    };
+
+    saveUserData();
+    updateGoals();
+}
+
+function updateGoals() {
+    const currentGoals = document.getElementById('current-goals');
+    const goals = userData[currentUser].goals;
+
+    let goalsHTML = '<h3>Current Goals</h3>';
+
+    if (goals.weight) {
+        const currentWeight = userData[currentUser].bmiHistory.length > 0 ? 
+            userData[currentUser].bmiHistory[userData[currentUser].bmiHistory.length - 1] : 0;
+        const weightProgress = Math.min(100, (currentWeight / goals.weight) * 100);
+        goalsHTML += `
+            <p>Weight Goal: ${goals.weight} kg</p>
+            <div class="goal-progress">
+                <div class="progress-bar" style="width: ${weightProgress}%"></div>
+            </div>
+        `;
+    }
+
+    if (goals.steps) {
+        // Assume we have a steps tracking feature
+        const currentSteps = 0; // This should be updated with actual step count
+        const stepsProgress = Math.min(100, (currentSteps / goals.steps) * 100);
+        goalsHTML += `
+            <p>Daily Step Goal: ${goals.steps} steps</p>
+            <div class="goal-progress">
+                <div class="progress-bar" style="width: ${stepsProgress}%"></div>
+            </div>
+        `;
+    }
+
+    if (goals.calories) {
+        const currentCalories = userData[currentUser].caloriesConsumedHistory.length > 0 ?
+            userData[currentUser].caloriesConsumedHistory[userData[currentUser].caloriesConsumedHistory.length - 1] : 0;
+        const caloriesProgress = Math.min(100, (currentCalories / goals.calories) * 100);
+        goalsHTML += `
+            <p>Daily Calorie Goal: ${goals.calories} calories</p>
+            <div class="goal-progress">
+                <div class="progress-bar" style="width: ${caloriesProgress}%"></div>
+            </div>
+        `;
+    }
+
+    currentGoals.innerHTML = goalsHTML;
 }
 
 function calculateBMI() {
@@ -114,6 +191,7 @@ function calculateBMI() {
     saveUserData();
     updateProgressChart();
     updateProfileInfo();
+    updateGoals();
 }
 
 let totalCaloriesBurned = 0;
@@ -147,6 +225,7 @@ function addActivity() {
         saveUserData();
         updateProgressChart();
         updateProfileInfo();
+        updateGoals();
     }
 }
 
@@ -241,6 +320,7 @@ function addFoodItem() {
         saveUserData();
         updateProgressChart();
         updateProfileInfo();
+        updateGoals();
     }
 }
 
@@ -377,4 +457,4 @@ window.addEventListener('load', function() {
         updateUI();
         updateProgressChart();
     }
-})
+});
