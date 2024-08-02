@@ -59,7 +59,16 @@ button:hover {
     background-color: #45a049;
 }
 
-#bmi-result, #activity-list, #water-intake-total, #total-calories, #hydration-status, #sleep-result, #food-list, #total-calories-consumed {
+#bmi-result, #activity-list, #water-intake-total, #total-calories, #hydration-status, #sleep-result, #food-list, #total-calories-consumed, #workout-plan {
     margin-top: 20px;
     font-weight: bold;
+}
+
+#workout-plan ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#workout-plan li {
+    margin-bottom: 10px;
 }

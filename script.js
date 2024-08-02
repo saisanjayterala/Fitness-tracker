@@ -104,3 +104,59 @@ function addFoodItem() {
         document.getElementById('calories').value = '';
     }
 }
+
+function getWorkout() {
+    const workoutType = document.getElementById('workout-type').value;
+    const workoutPlan = document.getElementById('workout-plan');
+    
+    if (workoutType) {
+        let exercises;
+        switch (workoutType) {
+            case 'full-body':
+                exercises = [
+                    'Squats: 3 sets of 12 reps',
+                    'Push-ups: 3 sets of 10 reps',
+                    'Lunges: 3 sets of 10 reps per leg',
+                    'Dumbbell rows: 3 sets of 12 reps',
+                    'Plank: 3 sets of 30 seconds'
+                ];
+                break;
+            case 'upper-body':
+                exercises = [
+                    'Bench press: 3 sets of 10 reps',
+                    'Pull-ups or lat pulldowns: 3 sets of 8 reps',
+                    'Shoulder press: 3 sets of 10 reps',
+                    'Bicep curls: 3 sets of 12 reps',
+                    'Tricep dips: 3 sets of 12 reps'
+                ];
+                break;
+            case 'lower-body':
+                exercises = [
+                    'Squats: 4 sets of 12 reps',
+                    'Deadlifts: 3 sets of 10 reps',
+                    'Leg press: 3 sets of 12 reps',
+                    'Calf raises: 3 sets of 15 reps',
+                    'Leg curls: 3 sets of 12 reps'
+                ];
+                break;
+            case 'cardio':
+                exercises = [
+                    'Jumping jacks: 3 sets of 1 minute',
+                    'High knees: 3 sets of 1 minute',
+                    'Burpees: 3 sets of 10 reps',
+                    'Mountain climbers: 3 sets of 1 minute',
+                    'Jump rope: 3 sets of 2 minutes'
+                ];
+                break;
+        }
+
+        workoutPlan.innerHTML = `<h3>${workoutType.charAt(0).toUpperCase() + workoutType.slice(1)} Workout</h3>`;
+        const ul = document.createElement('ul');
+        exercises.forEach(exercise => {
+            const li = document.createElement('li');
+            li.textContent = exercise;
+            ul.appendChild(li);
+        });
+        workoutPlan.appendChild(ul);
+    }
+}

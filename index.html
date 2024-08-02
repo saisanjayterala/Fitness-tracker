@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness App v4</title>
+    <title>Fitness App v5</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Fitness App v4</h1>
+        <h1>Fitness App v5</h1>
         <nav>
             <ul>
                 <li><a href="#bmi-calculator">BMI</a></li>
@@ -16,6 +16,7 @@
                 <li><a href="#hydration-tracker">Hydration</a></li>
                 <li><a href="#sleep-assessment">Sleep</a></li>
                 <li><a href="#nutrition-diary">Nutrition</a></li>
+                <li><a href="#workout-routines">Workouts</a></li>
             </ul>
         </nav>
     </header>
@@ -67,6 +68,19 @@
             <button onclick="addFoodItem()">Add Food Item</button>
             <div id="food-list"></div>
             <div id="total-calories-consumed"></div>
+        </section>
+
+        <section id="workout-routines">
+            <h2>Workout Routines</h2>
+            <select id="workout-type">
+                <option value="">Select workout type</option>
+                <option value="full-body">Full Body</option>
+                <option value="upper-body">Upper Body</option>
+                <option value="lower-body">Lower Body</option>
+                <option value="cardio">Cardio</option>
+            </select>
+            <button onclick="getWorkout()">Get Workout</button>
+            <div id="workout-plan"></div>
         </section>
     </main>
 
